@@ -1,10 +1,8 @@
-package javakara;
-
 import ch.karatojava.kapps.abstractscriptide.ScriptTools;
 import javakara.JavaKaraProgram;
 import javakara.JavaKaraProgram.JavaKara;
 import javakara.JavaKaraProgram.JavaKaraWorld;
-        
+
 /* BEFEHLE:  kara.
  *   move()  turnRight()  turnLeft()
  *   putLeaf()  removeLeaf()

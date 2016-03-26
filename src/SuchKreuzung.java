@@ -1,13 +1,11 @@
-package javakara;
-
 public class SuchKreuzung {
-	
+
 	Kreuzung kreuzung;
 	SuchKreuzung elternKreuzung;
 	int richtung;
 	private double kosten;
 	int luftlinie = -1;
-	
+
 	public SuchKreuzung(Kreuzung kreuzung, SuchKreuzung elternKreuzung, int richtung, double pfadKosten) {
 		this.kreuzung = kreuzung;
 		this.richtung = richtung;
@@ -17,11 +15,11 @@ public class SuchKreuzung {
 			addKosten(elternKreuzung.getKosten());
 		}
 	}
-	
+
 	public void calcLuftlinie(Kreuzung ziel) {
 		luftlinie = Math.abs(kreuzung.getX()-ziel.getX()) + Math.abs(kreuzung.getY()-ziel.getY());
 	}
-	
+
 	public int getLuftlinie() {
 		return luftlinie;
 	}
@@ -33,24 +31,24 @@ public class SuchKreuzung {
 	public Kreuzung getKreuzung() {
 		return kreuzung;
 	}
-	
+
 	public int getRichtung() {
 		return richtung;
 	}
-	
+
 	public void setRichtung(int richtung) {
 		this.richtung = richtung;
 	}
-	
+
 	public double getKosten() {
 		return kosten;
 	}
-	
+
 	public void addKosten(double kosten) {
 		this.kosten += kosten;
 	}
 
 	public void setKosten(double kosten) {
 		this.kosten = kosten;
-	}	
+	}
 }

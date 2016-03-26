@@ -1,13 +1,10 @@
-package javakara;
-
 import javakara.JavaKaraProgram;
 import javakara.JavaKaraProgram.JavaKara;
 import javakara.JavaKaraProgram.JavaKaraWorld;
-import javakara.PathFinderAlgo.SuchType;
 
 import java.util.HashMap;
 import ch.karatojava.kapps.abstractscriptide.ScriptTools;
-        
+
 /* BEFEHLE:  kara.
  *   move()  turnRight()  turnLeft()
  *   putLeaf()  removeLeaf()
@@ -23,19 +20,18 @@ public class PathFinder {
     Kreuzung start;
     Kreuzung ziel;
     int richtung = -1;
-	ScriptTools tools;
-	JavaKaraWorld world;
-	JavaKara kara;
-    SuchType suchType = SuchType.breitenSuche;
-	
-	
+	  ScriptTools tools;
+	  JavaKaraWorld world;
+	  JavaKara kara;
+    PathFinderAlgo.SuchType suchType = PathFinderAlgo.SuchType.breitenSuche;
+
+
     public PathFinder(ScriptTools tools, JavaKaraWorld world, JavaKara kara) {
     	this.tools = tools;
     	this.world = world;
     	this.kara = kara;
-    	start();
     }
-    
+
     public void start() {
         tools.println("----------------------Starte Pfadfinder-------------------------------------");
 
@@ -47,30 +43,30 @@ public class PathFinder {
 
 		tools.println("------SUCHE PFADE:");
         findePfade();
-		
-		tools.println("------SUCHE KÜRZESTEN PFAD:");
+
+		tools.println("------SUCHE KÃœRZESTEN PFAD:");
         algo = new PathFinderAlgo(tools, suchType);
         startTime = System.currentTimeMillis();
         algo.suche(start, ziel);
         tools.println("Pfad gefunden in: " + (System.currentTimeMillis() - startTime));
         printPfad();
-        
-        tools.showMessage("Kürzester Weg gefunden");
-		
+
+        tools.showMessage("KÃ¼rzester Weg gefunden");
+
 		tools.println("------LAUFE PFAD:");
         laufePfad();
     }
-    
+
 	void markKreuzungen() {
 		for(Kreuzung k : kreuzungen.values()) {
 			world.setLeaf(k.getX(), k.getY(), true);
 		}
 	}
-	
-	public void setSuchType(SuchType type) {
+
+	public void setSuchType(PathFinderAlgo.SuchType type) {
 		suchType = type;
 	}
-	
+
     void laufePfad() {
         for(int i = 0; i < algo.getPath().size()-1; i++) {
             WegKreuzung wK = algo.getPath().get(i);
@@ -80,7 +76,7 @@ public class PathFinder {
             while(kara.getPosition().getX() != zK.getX() || kara.getPosition().getY() != zK.getY()) {
                 tools.println("Pos Kara = " + kara.getPosition().getX() + "|" + kara.getPosition().getY() + " zK Pos = " + zK.getX() + "|" + zK.getY());
                 if(!kara.treeFront()) {
-                    kara.move();   
+                    kara.move();
                 } else if(!kara.treeRight()) {
                     addRichtung(1);
                     kara.turnRight();
@@ -92,21 +88,21 @@ public class PathFinder {
                 }
             }
         }
-           
+
     }
-    
+
     public void addRichtung(int n) {
         richtung += n;
         if(richtung > 3) {
             richtung = 0;
         } else if(richtung < 0) {
-            richtung = 3;   
+            richtung = 3;
         }
     }
-    
+
     public void drehRichtung(int neueRichtung) {
         if(richtung == -1) {
-            sucheStartRichtung();    
+            sucheStartRichtung();
         }
         int drehRichtung = richtung - neueRichtung;
         if(drehRichtung == 1 || drehRichtung == -3) {
@@ -114,7 +110,7 @@ public class PathFinder {
             addRichtung(-1);
             kara.turnLeft();
         } else if(drehRichtung == -1 || drehRichtung == 3) {
-            tools.println("Rechts Drehung von " + richtung + " nach " + neueRichtung);            
+            tools.println("Rechts Drehung von " + richtung + " nach " + neueRichtung);
             addRichtung(1);
             kara.turnRight();
         } else if(drehRichtung == 0) {
@@ -124,32 +120,32 @@ public class PathFinder {
             //Warum ??
             richtung = neueRichtung;
             kara.turnLeft();
-            kara.turnLeft();    
+            kara.turnLeft();
         }
     }
-    
+
     void sucheStartRichtung() {
         while(kara.treeFront()) {
             kara.turnLeft();
         }
         richtung = algo.getPath().get(0).getRichtung();
     }
-    
+
     public boolean isInKreuzungen(Coord pos) {
         return kreuzungen.containsKey(pos);
     }
-    
+
     public boolean isInKreuzungen(int x, int y) {
-        return isInKreuzungen(new Coord(x, y));   
+        return isInKreuzungen(new Coord(x, y));
     }
-    
+
     void printPfad() {
 		tools.println("Pfad zum Ziel:");
         for(WegKreuzung wK : algo.getPath()) {
-            tools.println("K: " + wK.getKreuzung().getX() + "|" + wK.getKreuzung().getY() + " R: " + wK.getRichtung());    
+            tools.println("K: " + wK.getKreuzung().getX() + "|" + wK.getKreuzung().getY() + " R: " + wK.getRichtung());
         }
     }
-    
+
     void createStartZiel() {
 		Coord startPos = new Coord((int) kara.getPosition().getX(), (int) kara.getPosition().getY());
 		start = kreuzungen.get(startPos);
@@ -157,52 +153,52 @@ public class PathFinder {
 			start = new Kreuzung(startPos.x, startPos.y);
 			kreuzungen.put(startPos, start);
 		}
-        
+
         if(ziel == null) {
             ziel = new Kreuzung(1, 1);
             kreuzungen.put(new Coord(ziel.getX(), ziel.getY()), ziel);
         }
         tools.println("Start: " + start.getX() + "|" + start.getY() + " Ziel: " + ziel.getX() + "|" + ziel.getY());
     }
-    
+
     void findePfade() {
         for(Kreuzung k : kreuzungen.values()) {
-            createPfade(k);   
+            createPfade(k);
         }
     }
-    
+
     void createPfade(Kreuzung k) {
 		try {
-			if(istFeldFrei(k.getX(), k.getY()-1) && k.getPfad(0) == null) {                    
+			if(istFeldFrei(k.getX(), k.getY()-1) && k.getPfad(0) == null) {
 				k.setPfad(0, folgePfad(k, 0, -1));
 			}
 			if(istFeldFrei(k.getX()+1, k.getY()) && k.getPfad(1) == null) {
 				k.setPfad(1, folgePfad(k, 1, 0));
 			}
-			if(istFeldFrei(k.getX(), k.getY()+1) && k.getPfad(2) == null) {         
+			if(istFeldFrei(k.getX(), k.getY()+1) && k.getPfad(2) == null) {
 				k.setPfad(2, folgePfad(k, 0, 1));
 			}
-			if(istFeldFrei(k.getX()-1, k.getY()) && k.getPfad(3) == null) {                   
+			if(istFeldFrei(k.getX()-1, k.getY()) && k.getPfad(3) == null) {
 				k.setPfad(3, folgePfad(k, -1, 0));
 			}
 		} catch(Exception e) {
 			tools.println("createPfade " + e.getMessage());
 		}
-        
+
     }
-	
+
 	int fixPosX(int posX) {
 		if(posX < 0) {posX = world.getSizeX() - 1;}
 		if(posX >= world.getSizeX()) {posX = 0;}
 		return posX;
 	}
-	
+
 	int fixPosY(int posY) {
 		if(posY < 0) {posY = world.getSizeY() - 1;}
 		if(posY >= world.getSizeY()) {posY = 0;}
 		return posY;
 	}
-    
+
     Pfad folgePfad(Kreuzung k, int dirX, int dirY) {
         int laenge = 1;
         int posX = k.getX();
@@ -210,27 +206,27 @@ public class PathFinder {
         int breake = 0;
 		posX = fixPosX(posX += dirX);
 		posY = fixPosY(posY += dirY);
-        
+
         while(!kreuzungen.containsKey(new Coord(posX, posY)) && breake < 800) {
             breake++;
 			try {
 				if(istFeldFrei(posX + dirX, posY + dirY)) {
 					posX = fixPosX(posX += dirX);
 					posY = fixPosY(posY += dirY);
-					laenge++;   
+					laenge++;
 				} else {
 					//tools.println("Kurve oder Sackgasse bei: " + posX + "|" + posY + " Dir = " + dirX + "|" + dirY);
 					if(dirX != -1 && istFeldFrei(posX+1, posY)) {
-						dirX = 1; dirY = 0;   
+						dirX = 1; dirY = 0;
 					}
 					else if(dirX != 1 && istFeldFrei(posX-1, posY)) {
-						dirX = -1; dirY = 0;   
+						dirX = -1; dirY = 0;
 					}
 					else if(dirY != -1 && istFeldFrei(posX, posY+1)) {
-						dirX = 0; dirY = 1;   
+						dirX = 0; dirY = 1;
 					}
 					else if(dirY != 1 && istFeldFrei(posX, posY-1)) {
-						dirX = 0; dirY = -1;   
+						dirX = 0; dirY = -1;
 					}
 					else {
 						return null;
@@ -249,22 +245,22 @@ public class PathFinder {
         if(dirX == 1) {k2.setPfad(3,pfad);}
         return pfad;
     }
-    
+
     public void findeKreuzungen() {
         for(int x = 0; x < world.getSizeX(); x++) {
             for(int y = 0; y < world.getSizeY(); y++) {
                 if(isKreuzung(x,y)) {
-                    kreuzungen.put(new Coord(x,y), new Kreuzung(x,y));         
+                    kreuzungen.put(new Coord(x,y), new Kreuzung(x,y));
                 } else if(world.isLeaf(x, y)) {
                     ziel = new Kreuzung(x,y);
 					kreuzungen.put(new Coord(x,y), ziel);
 				}
-				
+
             }
         }
-        
+
     }
-	
+
 	public boolean istFeldFrei(int x, int y) {
 		try {
 			if(x == -1 && (world.isEmpty(world.getSizeX()-1, y) || world.isLeaf(world.getSizeX()-1, y))) {
@@ -285,9 +281,9 @@ public class PathFinder {
 		}
 		return false;
     }
-	
-		
-    
+
+
+
     public boolean isKreuzung(int posX, int posY) {
         int freieRichtungen = 0;
         try {
@@ -295,14 +291,12 @@ public class PathFinder {
 				if(istFeldFrei(posX+1, posY)) {freieRichtungen++;}
 				if(istFeldFrei(posX-1, posY)) {freieRichtungen++;}
 				if(istFeldFrei(posX, posY+1)) {freieRichtungen++;}
-				if(istFeldFrei(posX, posY-1)) {freieRichtungen++;}                 
+				if(istFeldFrei(posX, posY-1)) {freieRichtungen++;}
 			}
 		} catch(Exception e) {
 			tools.println("is Kreuzung " + e.getMessage());
 		}
 		//tools.println("K: " + posX + "|" + posY + " freieRichtungen: " + freieRichtungen);
-        return freieRichtungen > 2;  
+        return freieRichtungen > 2;
     }
 }
-
-        

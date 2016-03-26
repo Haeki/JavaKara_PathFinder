@@ -1,8 +1,6 @@
-package javakara;
-
 import javakara.JavaKaraProgram;
-import javakara.Coord;
-        
+import Coord;
+
 /* BEFEHLE:  kara.
  *   move()  turnRight()  turnLeft()
  *   putLeaf()  removeLeaf()
@@ -13,7 +11,7 @@ import javakara.Coord;
  */
 public class FindeBaum extends JavaKaraProgram {
 
-  // hier können Sie eigene Methoden definieren
+  // hier kï¿½nnen Sie eigene Methoden definieren
 
   public void myProgram() {
      Coord c = new Coord(10,20);
@@ -23,5 +21,3 @@ public class FindeBaum extends JavaKaraProgram {
     }
   }
 }
-
-        

@@ -1,13 +1,11 @@
-package javakara;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import ch.karatojava.kapps.abstractscriptide.ScriptTools;
 
 public class PathFinderAlgo {
-	
-	private ArrayList<SuchKreuzung> openList = new ArrayList<>();	
+
+	private ArrayList<SuchKreuzung> openList = new ArrayList<>();
 	private ArrayList<Kreuzung> closeList = new ArrayList<>();
 	private ArrayList<WegKreuzung> path = new ArrayList<>();
 	Comparator<SuchKreuzung> dijkstraComparator = new DijkstraComparator();
@@ -17,34 +15,34 @@ public class PathFinderAlgo {
 	public double gesamtkosten;
 	ScriptTools tool;
 	SuchType suchType; // = SuchType.breitenSuche;
-	
+
 	public enum SuchType {
 		tiefenSuche, breitenSuche, dijkstraSuche, aStarSuche
 	}
-	
+
 	public PathFinderAlgo(SuchType type) {
 		this(null, type);
 	}
-	
+
 	public PathFinderAlgo(ScriptTools tool) {
 		this(tool, SuchType.breitenSuche);
 	}
-	
+
 	public PathFinderAlgo(ScriptTools tool, SuchType type) {
 		this.tool = tool;
-		this.suchType = type;						
+		this.suchType = type;
 	}
-	
+
 	public PathFinderAlgo() {
 		this(null, SuchType.breitenSuche);
 	}
-	
+
 	void println(String text) {
 		if(tool != null) {
 			tool.println(text);
 		}
 	}
-	
+
 	void showMessage(String text) {
 		if(tool != null) {
 			tool.showMessage(text);
@@ -70,7 +68,7 @@ public class PathFinderAlgo {
 			println("OpenList Size: " + openList.size());
 		}
 	}
-	
+
 	public void expandiere(SuchKreuzung aSuchKreuzung) {
 		Kreuzung aKreuzung = aSuchKreuzung.getKreuzung();
 		Pfad[] pfade = aKreuzung.getPfade();
@@ -84,17 +82,17 @@ public class PathFinderAlgo {
 			}
 		}
 	}
-	
+
 	public SuchKreuzung removeNextFromOpenList() {
 		SuchKreuzung skn = openList.remove(0);
 		closeList.add(skn.getKreuzung());
 		return skn;
 	}
-	
+
 	public void clearPath() {
 		path.clear();
 	}
-	
+
 	ArrayList<SuchKreuzung> suchKreuzungWeg = new ArrayList<>();
 	public void extrahierePfadAusSuchKreuzung(SuchKreuzung suchKreuzung) {
 		fillSKWegAusSuchKreuzung(suchKreuzung);
@@ -110,7 +108,7 @@ public class PathFinderAlgo {
 			path.add(new WegKreuzung(sk.getKreuzung(), r));
 		}
 	}
-	
+
 	public void fillSKWegAusSuchKreuzung(SuchKreuzung suchKreuzung) {
 		if (suchKreuzung.elternKreuzung != null) {
 			fillSKWegAusSuchKreuzung(suchKreuzung.elternKreuzung);
@@ -118,7 +116,7 @@ public class PathFinderAlgo {
 		suchKreuzungWeg.add(suchKreuzung);
 	}
 
-	
+
 	public boolean istZielKreuzung(SuchKreuzung suchKreuzung) {
 		return suchKreuzung.getKreuzung().equals(zielKreuzung);
 	}
@@ -133,33 +131,33 @@ public class PathFinderAlgo {
 	public ArrayList<SuchKreuzung> getOpenList() {
 		return openList;
 	}
-	
+
 	public ArrayList<WegKreuzung> getPath() {
 		return path;
 	}
 
 	public boolean addToCloseList(Kreuzung kreuzung) {
 		return closeList.add(kreuzung);
-		
+
 	}
-	
+
 	public boolean isInCloseList(SuchKreuzung suchKreuzung) {
 		return closeList.contains(suchKreuzung);
 	}
-	
+
 	public void removeFromOpenList(SuchKreuzung suchKreuzung) {
 		openList.remove(suchKreuzung);
 	}
-	
+
 	public void addToOpenList(SuchKreuzung suchKreuzung) {
 		switch(suchType) {
 			case breitenSuche: openList.add(suchKreuzung); break;
-			case tiefenSuche: openList.add(0, suchKreuzung); break;			
+			case tiefenSuche: openList.add(0, suchKreuzung); break;
 			case dijkstraSuche: openList.add(suchKreuzung); Collections.sort(openList, dijkstraComparator); break;
-			case aStarSuche: suchKreuzung.calcLuftlinie(zielKreuzung); openList.add(suchKreuzung); Collections.sort(openList, aStarComparator); break;	
-		}	
+			case aStarSuche: suchKreuzung.calcLuftlinie(zielKreuzung); openList.add(suchKreuzung); Collections.sort(openList, aStarComparator); break;
+		}
 	}
-		
+
 	class DijkstraComparator implements Comparator<SuchKreuzung> {
 
 		@Override
@@ -177,7 +175,7 @@ public class PathFinderAlgo {
 			return 0;
 		}
 	}
-	
+
 	class AStarComparator implements Comparator<SuchKreuzung> {
 
 		@Override
@@ -194,11 +192,9 @@ public class PathFinderAlgo {
 				return 1;
 			return 0;
 		}
-		
+
 	}
-	
-	
+
+
 
 }
-
-        

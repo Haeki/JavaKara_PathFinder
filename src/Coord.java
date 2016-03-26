@@ -1,19 +1,17 @@
-package javakara;
-
 public class Coord {
 	public int x;
 	public int y;
-	
+
 	public Coord(int x, int y) {
 		this.x = x;
-		this.y = y;		
+		this.y = y;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return 17*x + 31*y + x*y;
 	}
-	
+
 	@Override
 	public boolean equals(Object other) {
 		if(other instanceof Coord) {
@@ -23,5 +21,5 @@ public class Coord {
 		}
 		return false;
 	}
-	
+
 }
