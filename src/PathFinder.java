@@ -34,7 +34,23 @@ public class PathFinder {
 
     public void start() {
         tools.println("----------------------Starte Pfadfinder-------------------------------------");
+		scanWorld();
+		runAlgo();
+        laufePfad();
+    }
+	
+	public void runAlgo() {
+		tools.println("------SUCHE SHORTEST PFAD:");
+        algo = new PathFinderAlgo(tools, suchType);
+        startTime = System.currentTimeMillis();
+        algo.suche(start, ziel);
+        tools.println("Pfad gefunden in: " + (System.currentTimeMillis() - startTime));
+        printPfad();
 
+        tools.showMessage("Weg gefunden");
+	}
+	
+	public void scanWorld() {
 		tools.println("------SUCHE KREUZUNGEN:");
 		long startTime = System.currentTimeMillis();
         findeKreuzungen();
@@ -43,21 +59,10 @@ public class PathFinder {
 
 		tools.println("------SUCHE PFADE:");
         findePfade();
+		tools.println("Alle Kreuzungen und Pfade gefunden");
+	}
 
-		tools.println("------SUCHE KÜRZESTEN PFAD:");
-        algo = new PathFinderAlgo(tools, suchType);
-        startTime = System.currentTimeMillis();
-        algo.suche(start, ziel);
-        tools.println("Pfad gefunden in: " + (System.currentTimeMillis() - startTime));
-        printPfad();
-
-        tools.showMessage("Kürzester Weg gefunden");
-
-		tools.println("------LAUFE PFAD:");
-        laufePfad();
-    }
-
-	void markKreuzungen() {
+	public void markKreuzungen() {
 		for(Kreuzung k : kreuzungen.values()) {
 			world.setLeaf(k.getX(), k.getY(), true);
 		}
@@ -67,7 +72,8 @@ public class PathFinder {
 		suchType = type;
 	}
 
-    void laufePfad() {
+    public void laufePfad() {
+		tools.println("------LAUFE PFAD:");
         for(int i = 0; i < algo.getPath().size()-1; i++) {
             WegKreuzung wK = algo.getPath().get(i);
             Kreuzung zK = algo.getPath().get(i+1).getKreuzung();
@@ -155,7 +161,12 @@ public class PathFinder {
 		}
 
         if(ziel == null) {
-            ziel = new Kreuzung(1, 1);
+			int zielX = tools.intInput("Ziel X Koordinate:");
+			int zielY = tools.intInput("Ziel Y Koordinate:");
+			
+			if(zielX < 0 || zielX >= world.getSizeX()) {tools.showMessage("X Koordinate invalid!); zielX = 1;}
+			if(zielY < 0 || zielY >= world.getSizeY()) {tools.showMessage("Y Koordinate invalid!); zielY = 1;}
+            ziel = new Kreuzung(zielX, zielY);
             kreuzungen.put(new Coord(ziel.getX(), ziel.getY()), ziel);
         }
         tools.println("Start: " + start.getX() + "|" + start.getY() + " Ziel: " + ziel.getX() + "|" + ziel.getY());

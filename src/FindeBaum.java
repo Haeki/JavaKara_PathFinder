@@ -1,5 +1,4 @@
 import javakara.JavaKaraProgram;
-import Coord;
 
 /* BEFEHLE:  kara.
  *   move()  turnRight()  turnLeft()
@@ -10,14 +9,10 @@ import Coord;
  *   mushroomFront()  onLeaf()
  */
 public class FindeBaum extends JavaKaraProgram {
-
-  // hier k�nnen Sie eigene Methoden definieren
-
-  public void myProgram() {
-     Coord c = new Coord(10,20);
-    // hier kommt das Hauptprogramm hin, zB:
-    while (!kara.treeFront()) {
-      kara.move();
-    }
-  }
+	PathFinder pathFinder;
+ 
+	public void myProgram() {
+		pathFinder = new PathFinder(tools, world, kara);
+		pathFinder.start();
+	}
 }
