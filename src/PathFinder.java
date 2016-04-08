@@ -42,7 +42,7 @@ public class PathFinder {
 	public void runAlgo() {
 		tools.println("------SUCHE SHORTEST PFAD:");
         algo = new PathFinderAlgo(tools, suchType);
-        startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
         algo.suche(start, ziel);
         tools.println("Pfad gefunden in: " + (System.currentTimeMillis() - startTime));
         printPfad();
@@ -64,7 +64,7 @@ public class PathFinder {
 
 	public void markKreuzungen() {
 		for(Kreuzung k : kreuzungen.values()) {
-			world.setLeaf(k.getX(), k.getY(), true);
+			world.setMushroom(k.getX(), k.getY(), true);
 		}
 	}
 
@@ -164,8 +164,8 @@ public class PathFinder {
 			int zielX = tools.intInput("Ziel X Koordinate:");
 			int zielY = tools.intInput("Ziel Y Koordinate:");
 			
-			if(zielX < 0 || zielX >= world.getSizeX()) {tools.showMessage("X Koordinate invalid!); zielX = 1;}
-			if(zielY < 0 || zielY >= world.getSizeY()) {tools.showMessage("Y Koordinate invalid!); zielY = 1;}
+			if(zielX < 0 || zielX >= world.getSizeX()) {tools.showMessage("X Koordinate invalid! Using 1 instead"); zielX = 1;}
+			if(zielY < 0 || zielY >= world.getSizeY()) {tools.showMessage("Y Koordinate invalid! Using 1 instead"); zielY = 1;}
             ziel = new Kreuzung(zielX, zielY);
             kreuzungen.put(new Coord(ziel.getX(), ziel.getY()), ziel);
         }

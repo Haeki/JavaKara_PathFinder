@@ -13,6 +13,7 @@ public class FindeBaum extends JavaKaraProgram {
  
 	public void myProgram() {
 		pathFinder = new PathFinder(tools, world, kara);
+        pathFinder.setSuchType(PathFinderAlgo.SuchType.dijkstraSuche);
 		pathFinder.start();
 	}
 }
